@@ -74,3 +74,25 @@ export function getQueryString(req: http.IncomingMessage): Promise<any> {
     resolve(parsedQuery);
   });
 }
+
+interface RequestHandler {
+  (req: http.IncomingMessage, res: http.ServerResponse): void;
+}
+
+// main app
+const REQUIRED_CONTENT_TYPE = "application/json";
+const ACCEPT_ENCODING_1 = "application/json";
+const ACCEPT_ENCODING_2 = "*/*";
+export const entryCheck = function (req: any) {
+  const contentType = req.headers["content-type"];
+  if (contentType && !contentType.includes(REQUIRED_CONTENT_TYPE)) {
+    throw new Error("Sorry we only support content type as json format.");
+  }
+
+  const accept = req.headers["accept"];
+  if (
+    !(accept.includes(ACCEPT_ENCODING_1) || accept.includes(ACCEPT_ENCODING_2))
+  ) {
+    throw new Error("Sorry we only support accept json format.");
+  }
+};
