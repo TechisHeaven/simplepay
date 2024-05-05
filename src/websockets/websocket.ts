@@ -28,9 +28,10 @@
 import { WebSocketServer } from "ws";
 import dotenv from "dotenv";
 import http from "http";
+import sanitizedConfig from "../utils/env.config";
 dotenv.config();
 
-const port = process.env.WEBSOCKET_PORT || 8080;
+const port = sanitizedConfig.WEBSOCKET_PORT || 8080;
 
 const server = http.createServer().listen(port);
 export function createWebSocketServer(): Promise<WebSocketServer> {

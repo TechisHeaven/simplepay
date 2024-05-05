@@ -1,10 +1,14 @@
+import dotenv from "dotenv";
 // Loading process.env as ENV interface
 
 import { ENV, Config } from "../types/types.env";
+dotenv.config();
+
 export const getConfig = (): ENV => {
-  const secure = process.env.EMAIL_SECURE?.toLowerCase() === "true";
   return {
-    FRONTEND_MAIN_URL: process.env.FRONTEND_MAIN_URL,
+    WEBSOCKET_PORT: Number(process.env.WEBSOCKET_PORT),
+    JWT_SECRET: process.env.JWT_SECRET,
+    SERVER_PORT: Number(process.env.SERVER_PORT),
   };
 };
 

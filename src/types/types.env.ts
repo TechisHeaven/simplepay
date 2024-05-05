@@ -1,7 +1,11 @@
 export interface ENV {
-  FRONTEND_MAIN_URL: string | undefined;
+  WEBSOCKET_PORT: number | undefined;
+  JWT_SECRET: string | undefined;
+  SERVER_PORT: number | undefined;
 }
 
 export interface Config {
-  FRONTEND_MAIN_URL: string;
+  WEBSOCKET_PORT: number;
+  JWT_SECRET: string;
+  SERVER_PORT: number;
 }

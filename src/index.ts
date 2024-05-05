@@ -3,11 +3,12 @@ import dotenv from "dotenv";
 import errorHandler from "./utils/error.handle";
 import cors from "cors";
 import { createWebSocketServer } from "./websockets/websocket";
-dotenv.config();
+import sanitizedConfig from "./utils/env.config";
 const app = express();
-const port = 3000;
+const port = sanitizedConfig.SERVER_PORT;
 const authRoutes = require("./routes/auth.routes");
 
+dotenv.config();
 app.use(express.json());
 app.use(cors());
 
@@ -28,6 +29,7 @@ app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
+// websockets logic here-----------
 (async () => {
   try {
     const wss = await createWebSocketServer(); // Adjust port if needed
