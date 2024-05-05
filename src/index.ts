@@ -2,7 +2,8 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import errorHandler from "./utils/error.handle";
 import cors from "cors";
-dotenv.config({ path: "./.env" });
+import { createWebSocketServer } from "./websockets/websocket";
+dotenv.config();
 const app = express();
 const port = 3000;
 const authRoutes = require("./routes/auth.routes");
@@ -26,3 +27,25 @@ app.use((req: Request, res: Response) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+(async () => {
+  try {
+    const wss = await createWebSocketServer(); // Adjust port if needed
+
+    // Your WebSocket server logic here
+    wss.on("connection", (ws) => {
+      // Handle incoming connections (implement authentication/authorization here)
+      ws.on("message", (message) => {
+        const newData = message.toString("utf8");
+        // Handle incoming messages
+        wss.clients.forEach(function (client) {
+          if (client !== ws) {
+            client.send(message.toString());
+          }
+        });
+      });
+    });
+  } catch (error) {
+    console.error("Error creating WebSocket server:", error);
+  }
+})();
