@@ -25,6 +25,8 @@ const config: Config = {
       colors: {
         "primary-color": "#5566ff",
         "secondary-color": "rgba(35, 35, 35)",
+        "secondary-color-background": "#393939",
+        "secondary-color-light-background": "#e9e9e9",
       },
     },
   },

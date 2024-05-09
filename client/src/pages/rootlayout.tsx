@@ -13,7 +13,6 @@ export default function rootlayout({ children }: any) {
         <div className="flex flex-row gap-2 relative">{children}</div>
       ) : (
         <>
-          {" "}
           <Header />
           <div className="flex flex-row gap-2 relative">
             <Sidebar />
