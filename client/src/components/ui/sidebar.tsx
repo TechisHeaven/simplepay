@@ -3,25 +3,9 @@ import { getSession, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import ProfileSidebar from "./profileSidebar";
 
-export async function getServerSideProp() {
-  try {
-    const session = await getSession();
-    console.log("session", session);
-    return {
-      props: {
-        session: {
-          email: "Test",
-          image: "test2",
-        },
-      },
-    };
-  } catch (error: any) {
-    return { props: { sessionError: error.message || "Unknown error" } };
-  }
-}
-
-export default function Sidebar({ session }) {
+export default function Sidebar() {
   const router = useRouter();
 
   return (
@@ -68,17 +52,7 @@ export default function Sidebar({ session }) {
         </Link>
       </div>
       <div>
-        <div className="profile">
-          <Link href="/profile">
-            <Image
-              fetchPriority="high"
-              alt="profile-image"
-              src={session?.user?.image}
-              width={60}
-              height={60}
-            />
-          </Link>
-        </div>
+        <ProfileSidebar />
       </div>
     </aside>
   );
