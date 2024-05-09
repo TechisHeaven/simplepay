@@ -1,11 +1,11 @@
 import { BoxesCore } from "@/components/ui/background-boxes";
-import SigninForm from "@/components/ui/signinForm";
+import SignupForm from "@/components/ui/signupForm";
 
-export default function Login() {
+export default function Register() {
   return (
     <div className="h-screen items-center flex w-full relative overflow-hidden">
       <BoxesCore />
-      <SigninForm />
+      <SignupForm />
     </div>
   );
 }

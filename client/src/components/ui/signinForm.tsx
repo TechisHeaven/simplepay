@@ -1,43 +1,68 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Label } from "./label";
 import { Input } from "./input";
 import { cn } from "@/utils/cn";
 import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
-export default function SignupForm() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+interface UserFormData {
+  email: string;
+  password: string;
+}
+export default function SigninForm() {
+  const [formData, setFormData] = useState<UserFormData>({
+    email: "",
+    password: "",
+  });
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted");
+    const res = await signIn("credentials", {
+      ...formData,
+    });
+    console.log(res);
   };
+
+  const { data: session, status } = useSession();
+  // console.log(session);
+  function handleFormData(event: any) {
+    const { name, value } = event.target;
+    setFormData((prevFormData: UserFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  }
+
   return (
     <div className="max-w-md  border border-gray-600 w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input z-10 bg-white dark:bg-black">
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
         Welcome to SimplePay
       </h2>
       <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-        Register to SimplePay if you can because we don&apos;t have a without
-        login exploring system yet.
+        Login to SimplePay if you can because we don&apos;t have a without login
+        exploring system yet.
       </p>
 
       <form className="my-8" onSubmit={handleSubmit}>
-        <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
-          <LabelInputContainer>
-            <Label htmlFor="firstname">Name</Label>
-            <Input id="firstname" placeholder="Himanshu" type="text" />
-          </LabelInputContainer>
-        </div>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
           <Input
             id="email"
+            name="email"
+            onChange={handleFormData}
             placeholder="projectsimplepay@example.com"
             type="email"
           />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
+          <Input
+            id="password"
+            onChange={handleFormData}
+            placeholder="••••••••"
+            name="password"
+            type="password"
+          />
         </LabelInputContainer>
 
         <button
@@ -47,11 +72,12 @@ export default function SignupForm() {
           Sign up &rarr;
           <BottomGradient />
         </button>
-
-        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
-
-        <div className="flex flex-col space-y-4">
+      </form>
+      <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
+      <div className="flex flex-col space-y-4">
+        {!session ? (
           <button
+            onClick={() => signIn("github")}
             className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
             type="submit"
           >
@@ -61,18 +87,22 @@ export default function SignupForm() {
             </span>
             <BottomGradient />
           </button>
-          <button
-            className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-            type="submit"
-          >
-            <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-            <span className="text-neutral-700 dark:text-neutral-300 text-sm">
-              Google
-            </span>
-            <BottomGradient />
-          </button>
-        </div>
-      </form>
+        ) : (
+          <button onClick={() => signOut()}>Logout</button>
+        )}
+
+        <button
+          onClick={() => signIn("google")}
+          className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
+          type="submit"
+        >
+          <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
+          <span className="text-neutral-700 dark:text-neutral-300 text-sm">
+            Google
+          </span>
+          <BottomGradient />
+        </button>
+      </div>
     </div>
   );
 }
