@@ -1,6 +1,5 @@
 import Header from "@/components/ui/header";
 import Sidebar from "@/components/ui/sidebar";
-import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 export default function rootlayout({ children }: any) {

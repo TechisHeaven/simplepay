@@ -1,3 +1,5 @@
+import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+
 export default function TransactionItem() {
   return (
     <div className="transaction">
@@ -9,7 +11,10 @@ export default function TransactionItem() {
             height={40}
             alt=""
           ></Image> */}
-        <div className="w-10 h-10 bg-green-500 rounded-xl"></div>
+        <Avatar>
+          <AvatarImage src="" />
+          <AvatarFallback className={`bg-primary-color`}>CN</AvatarFallback>
+        </Avatar>
         <div className="font-medium flex-1">
           <h6 className="text-xs">Public Transport</h6>
           <p className="text-gray-400 text-xs">5 hours ago</p>

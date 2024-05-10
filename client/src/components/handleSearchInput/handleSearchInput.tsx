@@ -14,11 +14,11 @@ export default function handleSearchInput() {
           type="text"
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Name, Email, Phone no."
-          className="w-full p-2 px-4 outline-none rounded-md bg-secondary-color-background  focus:border-primary-color hover:border-primary-color border transition-all"
+          className="w-full p-2 px-4 outline-none rounded-md bg-secondary-color-background  focus:border-primary-color hover:border-primary-color border border-gray-500 transition-all"
         />
       </div>
       <div className="items p-2 flex-col flex gap-4">
-        {userData.length > 0 && <SearchPaymentItem />}
+        {/* {userData?.length > 0 && <SearchPaymentItem />} */}
       </div>
     </>
   );

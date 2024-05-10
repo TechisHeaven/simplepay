@@ -2,7 +2,7 @@ import { IconNotification, IconSettings } from "@tabler/icons-react";
 
 export default function Header() {
   return (
-    <div className="flex flex-row justify-between p-8 border-b-[1px] max-w-[2200px] items-center border-gray-600">
+    <div className="flex flex-row justify-between p-6 border-b-[1px] max-w-[2200px] items-center border-gray-600">
       <div className="font-semibold text-xl">Simple Pay</div>
       <h6 className="text-sm font-semibold">Dashboard</h6>
       <div>

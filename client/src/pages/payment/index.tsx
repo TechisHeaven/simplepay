@@ -3,6 +3,7 @@ import SearchPaymentItem from "@/components/ui/searchPaymentItem";
 import HandleSearchInput from "@/components/handleSearchInput/handleSearchInput";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
+import Head from "next/head";
 
 export const getServerSideProps = async (context: any) => {
   // Fetch data from external API
@@ -26,6 +27,10 @@ export default function Page({
 }) {
   return (
     <div className="p-8 w-full flex-row flex gap-4">
+      <Head>
+        <title>Payment</title>
+        <meta property="og:title" content="Payment" key="title" />
+      </Head>
       <div className="w-full max-w-[420px] p-4">
         <h1 className="font-semibold text-3xl py-4">Send Money</h1>
         <HandleSearchInput />

@@ -4,8 +4,6 @@ import {
   IconHome,
   IconTransactionRupee,
 } from "@tabler/icons-react";
-import { getSession, useSession } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ProfileSidebar from "./profileSidebar";
