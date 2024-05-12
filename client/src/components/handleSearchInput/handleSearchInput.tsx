@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import SearchPaymentItem from "../ui/searchPaymentItem";
+import SearchPaymentItem from "../ui/SearchPaymentItem";
 
 export default function handleSearchInput() {
   const [search, setSearch] = useState("");
@@ -18,7 +18,7 @@ export default function handleSearchInput() {
         />
       </div>
       <div className="items p-2 flex-col flex gap-4">
-        {/* {userData?.length > 0 && <SearchPaymentItem />} */}
+        {userData.length > 0 && <SearchPaymentItem />}
       </div>
     </>
   );

@@ -1,5 +1,4 @@
 import QrContainer from "@/components/ui/qrContainer";
-import SearchPaymentItem from "@/components/ui/searchPaymentItem";
 import HandleSearchInput from "@/components/handleSearchInput/handleSearchInput";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";

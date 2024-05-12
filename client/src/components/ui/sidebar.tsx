@@ -32,7 +32,8 @@ export default function Sidebar() {
         >
           <div
             className={
-              router.pathname == "/payment"
+              router.pathname.startsWith("/payment") ||
+              router.pathname.startsWith("/gateway")
                 ? "active bg-primary-color rounded-md p-2"
                 : "rounded-sm p-2 transition-all"
             }

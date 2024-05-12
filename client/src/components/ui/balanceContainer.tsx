@@ -1,6 +1,7 @@
 import { IconChevronDown, IconCopy, IconDots } from "@tabler/icons-react";
 import Link from "next/link";
 import SendMoney from "./sendMoney";
+import { formatMoney } from "@/utils/formatNumber";
 
 export default function balanceContainer() {
   return (
@@ -13,8 +14,9 @@ export default function balanceContainer() {
           </button>
         </div>
         <div>
-          <h1 className="text-3xl">
-            ₹20,000.20 <span className="text-primary-color text-xs">Rs</span>
+          <h1 className="text-3xl font-bold">
+            ₹ {formatMoney(20000.22)}{" "}
+            <span className="text-primary-color text-xs">Rs</span>
           </h1>
         </div>
         <div className="account-copy border border-primary-color/90 p-1 px-2 rounded-md flex flex-row items-center gap-2">
