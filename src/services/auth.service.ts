@@ -11,6 +11,7 @@ export const AuthService = {
   //register user
   signUp: async (props: UserInterface) => {
     try {
+      console.log("result", props);
       if (!props.name && !props.email && !props.password) {
         throw createError(statusCodes.notFound, "Please Provide all Fields.");
       }
@@ -30,7 +31,8 @@ export const AuthService = {
       props.password = await PasswordUtils.bycrptPassword(props.password);
       const id = uuid4();
       props.id = id;
-      props.token = await JWTUtils.generateToken({ id });
+      props.image =
+        "https://lh3.googleusercontent.com/a/ACg8ocIXH1OzdIK01CcjMDfzvlhE-LPnbaeCUG5RLgnXP0puXt80bqNX=s96-c";
       const result = user.createUser(props);
       if (!result) {
         throw createError(statusCodes.badRequest, "Failed to create user");
@@ -73,17 +75,12 @@ export const AuthService = {
         throw createError(statusCodes.conflict, "Password is Incorrect.");
       }
       const id = emailCheck.id!;
-      const token = await JWTUtils.generateToken({ id });
-
-      if (!token) {
-        throw createError(statusCodes.badRequest, "Failed to create Token");
-      }
 
       return {
         status: statusCodes.ok,
         error: false,
         success: true,
-        result: { ...emailCheck, token },
+        result: { ...emailCheck },
         message: "User Login successfully",
       };
     } catch (error: any) {

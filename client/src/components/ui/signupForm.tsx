@@ -1,15 +1,57 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "./label";
 import { Input } from "./input";
 import { cn } from "@/utils/cn";
 import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
+import { signIn, useSession } from "next-auth/react";
+import { UserFormData } from "@/types/types.main";
+import { useRouter } from "next/navigation";
+import { Loader } from "./Loader";
 
 export default function SignupForm() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Form submitted");
+  const [formData, setFormData] = useState<UserFormData>({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const { data: session, status, update } = useSession();
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    try {
+      e.preventDefault();
+      console.log("Form submitted");
+      const res = await signIn("signUp", {
+        ...formData,
+        redirect: false,
+      });
+      if (res?.status == 200) {
+        const newSession = {
+          ...session,
+          user: {
+            res,
+          },
+        };
+
+        await update(newSession);
+
+        router.push("/");
+      } else {
+        console.log(res);
+        // throw new Error(res?.error);
+      }
+    } catch (error: any) {
+      console.log(error.message);
+    }
   };
+  function handleFormData(event: any) {
+    const { name, value } = event.target;
+    setFormData((prevFormData: UserFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  }
   return (
     <div className="max-w-md  border border-gray-600 w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input z-10 bg-white dark:bg-black">
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
@@ -23,29 +65,50 @@ export default function SignupForm() {
       <form className="my-8" onSubmit={handleSubmit}>
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
           <LabelInputContainer>
-            <Label htmlFor="firstname">Name</Label>
-            <Input id="firstname" placeholder="Himanshu" type="text" />
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              name="name"
+              placeholder="Himanshu"
+              onChange={handleFormData}
+              type="text"
+            />
           </LabelInputContainer>
         </div>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
           <Input
             id="email"
+            name="email"
+            onChange={handleFormData}
             placeholder="projectsimplepay@example.com"
             type="email"
           />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
+          <Input
+            onChange={handleFormData}
+            id="password"
+            name="password"
+            placeholder="••••••••"
+            type="password"
+          />
         </LabelInputContainer>
 
         <button
           className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="submit"
+          disabled={status === "loading"}
         >
-          Sign up &rarr;
-          <BottomGradient />
+          {status === "loading" ? (
+            <Loader />
+          ) : (
+            <>
+              Sign up &rarr;
+              <BottomGradient />
+            </>
+          )}
         </button>
 
         <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />

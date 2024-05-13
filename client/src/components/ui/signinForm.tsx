@@ -5,25 +5,55 @@ import { Input } from "./input";
 import { cn } from "@/utils/cn";
 import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { UserFormData } from "@/types/types.main";
+import { useRouter } from "next/navigation";
+import { Loader } from "./Loader";
 
-interface UserFormData {
-  email: string;
-  password: string;
-}
 export default function SigninForm() {
   const [formData, setFormData] = useState<UserFormData>({
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { data: session, status, update } = useSession();
+  const router = useRouter();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const res = await signIn("credentials", {
-      ...formData,
-    });
-    console.log(res);
+    try {
+      setLoading(true);
+      e.preventDefault();
+      const res = await signIn("signIn", {
+        ...formData,
+        redirect: false,
+      });
+
+      if (res?.status == 200) {
+        const newSession = {
+          ...session,
+          user: {
+            res,
+          },
+        };
+
+        await update(newSession);
+
+        router.push("/");
+        setLoading(false);
+      } else {
+        if (!res?.ok) {
+          setError(res?.error || "Error");
+        }
+        setLoading(false);
+        // throw new Error(res?.error);
+      }
+    } catch (error: any) {
+      setLoading(false);
+      console.log(error.message);
+    }
   };
 
-  const { data: session, status } = useSession();
   // console.log(session);
   function handleFormData(event: any) {
     const { name, value } = event.target;
@@ -64,32 +94,35 @@ export default function SigninForm() {
             type="password"
           />
         </LabelInputContainer>
-
+        <p className="text-red-500 text-sm">{error}</p>
         <button
           className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="submit"
+          disabled={status === "loading"}
         >
-          Sign up &rarr;
-          <BottomGradient />
+          {status === "loading" || loading ? (
+            <Loader />
+          ) : (
+            <>
+              Sign In&rarr;
+              <BottomGradient />
+            </>
+          )}
         </button>
       </form>
       <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
       <div className="flex flex-col space-y-4">
-        {!session ? (
-          <button
-            onClick={() => signIn("github")}
-            className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-            type="submit"
-          >
-            <IconBrandGithub className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-            <span className="text-neutral-700 dark:text-neutral-300 text-sm">
-              GitHub
-            </span>
-            <BottomGradient />
-          </button>
-        ) : (
-          <button onClick={() => signOut()}>Logout</button>
-        )}
+        <button
+          onClick={() => signIn("github")}
+          className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
+          type="submit"
+        >
+          <IconBrandGithub className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
+          <span className="text-neutral-700 dark:text-neutral-300 text-sm">
+            GitHub
+          </span>
+          <BottomGradient />
+        </button>
 
         <button
           onClick={() => signIn("google")}

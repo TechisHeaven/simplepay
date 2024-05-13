@@ -8,6 +8,7 @@ export class UserManager {
 
   createUser(user: UserInterface) {
     this.user.push(user);
+
     return user;
   }
 
