@@ -106,12 +106,6 @@ export const authOptions = {
             throw new Error(result.message);
           }
         }
-        return {
-          name: "Himanshu user",
-          image:
-            "https://lh3.googleusercontent.com/a/ACg8ocIXH1OzdIK01CcjMDfzvlhE-LPnbaeCUG5RLgnXP0puXt80bqNX=s96-c",
-          email: result.email,
-        };
       },
     }),
 
@@ -125,8 +119,25 @@ export const authOptions = {
     }),
     // ...add more providers here
   ],
+  callbacks: {
+    // Add other callbacks as needed
+    async jwt({ token, user, account }: any) {
+      // Add user id to the token
+      if (account) {
+        token.accessToken = account.access_token;
+        token.id = user.id;
+      }
 
-  // callback: {
+      return token;
+    },
+
+    async session({ session, token }: any) {
+      session.accessToken = token.accessToken;
+      session.user.id = token.id;
+
+      return session;
+    },
+  },
   //   // async jwt({ token, user, session, trigger }: any) {
   //   //   // console.log(
   //   //   //   `token -------token ${token} - token , user ${user} , session ${session}`
