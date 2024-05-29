@@ -7,6 +7,6 @@ const router = express.Router();
 //*create bank account route
 router.route("/").post(BankController.createBank);
 // fetch bank account routes
-// router.route("/").get(BankController.createBank);
+router.route("/:id").get(BankController.fetchBank);
 
 module.exports = router;
