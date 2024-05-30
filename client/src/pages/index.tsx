@@ -9,9 +9,8 @@ import { getSession } from "next-auth/react";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Page({
-  repo,
+  account,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log(repo);
   return (
     <>
       <Head>
@@ -19,9 +18,9 @@ export default function Page({
         <meta property="og:title" content="Simple Pay" key="title" />
       </Head>
       <main className={`${inter.className} p-8 w-full`}>
-        <BalanceContainer />
+        <BalanceContainer account={account} />
         <div className="flex flex-row gap-4">
-          <CardContainer />
+          <CardContainer account={account} />
           <LastTransaction />
         </div>
       </main>
@@ -39,20 +38,20 @@ export const getServerSideProps = (async (context) => {
 
   const id: string | null = session?.user?.id || null;
 
-  if (!id) {
-    return {
-      redirect: {
-        destination: "/bank", // Redirect to login page if user is not authenticated
-        permanent: false,
-      },
-    };
-  }
+  // if (!id) {
+  //   return {
+  //     redirect: {
+  //       destination: "/bank", // Redirect to login page if user is not authenticated
+  //       permanent: false,
+  //     },
+  //   };
+  // }
   const res = await fetch(`http://localhost:5000/api/bank/${id}`, {
     method: "GET",
     cache: "no-cache",
     priority: "high",
   });
-  const repo: Repo = await res.json();
+  const data: Repo = await res.json();
   // Pass data to the page via props
-  return { props: { repo } };
-}) satisfies GetServerSideProps<{ repo: Repo }>;
+  return { props: { account: data?.result || null } };
+}) satisfies GetServerSideProps<{ account: Repo }>;

@@ -4,7 +4,7 @@ import SignupForm from "@/components/ui/signupForm";
 export default function Register() {
   return (
     <div className="h-screen items-center flex w-full relative overflow-hidden">
-      <BoxesCore />
+      {/* <BoxesCore /> */}
       <SignupForm />
     </div>
   );

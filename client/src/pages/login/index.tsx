@@ -4,7 +4,7 @@ import SigninForm from "@/components/ui/signinForm";
 export default function Login() {
   return (
     <div className="h-screen items-center flex w-full relative overflow-hidden">
-      <BoxesCore />
+      {/* <BoxesCore /> */}
       <SigninForm />
     </div>
   );

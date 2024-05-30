@@ -6,15 +6,9 @@ import { randomNumberGenerator } from "../utils/randomNumberGenerator";
 
 const Bank = new BankManager();
 export const BankService = {
-  createBank: async ({
-    id,
-    customerName,
-  }: {
-    id: string;
-    customerName: string;
-  }) => {
+  createBank: async ({ id, name }: { id: string; name: string }) => {
     try {
-      if (!id || !customerName) {
+      if (!id || !name) {
         throw createError(statusCodes.notFound, "All Fields not found");
       }
       const checkIdExists = await Bank.getUserBankById(id);
@@ -29,7 +23,7 @@ export const BankService = {
         id: bankId,
         name: "SimplePay Bank",
         customerId: id,
-        customer_name: customerName,
+        customer_name: name,
         account: accountNumber,
         balance: 12000,
         cards: [
@@ -46,7 +40,7 @@ export const BankService = {
       const result = Bank.createBank(bankFields);
 
       return {
-        status: statusCodes.ok,
+        status: statusCodes.created,
         success: true,
         error: false,
         result,

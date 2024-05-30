@@ -1,8 +1,14 @@
 import { IconDots, IconPlus } from "@tabler/icons-react";
 
 import AccountCard from "./accountCard";
+import { BankDataInterface } from "@/types/types.main";
 
-export default function CardContainer() {
+export default function CardContainer({
+  account,
+}: {
+  account: BankDataInterface;
+}) {
+  const { cards } = account;
   return (
     <div className="w-[320px]">
       <div className=" text-sm flex items-center flex-row justify-between py-4 my-2">
@@ -12,7 +18,9 @@ export default function CardContainer() {
         </button>
       </div>
       <div className="cards flex flex-col gap-2">
-        <AccountCard />
+        {cards?.map((card, index) => {
+          return <AccountCard card={card} />;
+        })}
       </div>
       <button className="outline-dashed gap-2 outline-gray-600 flex items-center rounded-full w-full p-2 px-4 text-center">
         <p className="flex-1">New Card?</p>

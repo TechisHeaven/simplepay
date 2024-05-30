@@ -4,6 +4,7 @@ import { BankService } from "../services/bank.service";
 export const BankController = {
   createBank: async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log(req.body);
       const result = await BankService.createBank(req.body);
       return res.status(201).json(result);
     } catch (error) {

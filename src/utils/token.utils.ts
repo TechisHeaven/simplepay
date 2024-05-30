@@ -1,12 +1,14 @@
 import jwt from "jsonwebtoken";
 import { createError } from "./custom.error";
 import sanitizedConfig from "./env.config";
+import { UserInterface } from "../types/types.user";
 
 export const JWTUtils = {
-  generateToken: async (payload: { id: string }) => {
+  generateToken: async (payload: UserInterface) => {
+    const { password, ...otherPayload } = payload;
     const secret = sanitizedConfig.JWT_SECRET;
     const expiresIn = "30d";
-    const decode = jwt.sign({ payload }, secret, { expiresIn });
+    const decode = jwt.sign({ payload: otherPayload }, secret, { expiresIn });
     return decode;
   },
   verifyToken: async (token: string) => {

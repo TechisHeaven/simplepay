@@ -5,6 +5,7 @@ export async function middleware(req: NextRequest) {
   const auth = await req.cookies.get("next-auth.session-token")?.value;
   const CurrentUrlIsLogin = url.pathname.startsWith("/login");
   const CurrentUrlIsRegister = url.pathname.startsWith("/register");
+  const CurrentUrlIsBank = url.pathname.startsWith("/bank");
 
   if (!auth) {
     if (!CurrentUrlIsLogin && !CurrentUrlIsRegister) {

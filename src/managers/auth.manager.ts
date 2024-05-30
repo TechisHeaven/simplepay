@@ -23,6 +23,6 @@ export class UserManager {
   }
 
   getUserByToken(token: string) {
-    return this.user.filter((user) => user.token === token);
+    return this.user.filter((user) => user.accessToken === token);
   }
 }

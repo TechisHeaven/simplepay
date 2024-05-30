@@ -33,6 +33,7 @@ export const AuthService = {
       props.id = id;
       props.image =
         "https://lh3.googleusercontent.com/a/ACg8ocIXH1OzdIK01CcjMDfzvlhE-LPnbaeCUG5RLgnXP0puXt80bqNX=s96-c";
+      props.accessToken = await JWTUtils.generateToken(props);
       const result = user.createUser(props);
       if (!result) {
         throw createError(statusCodes.badRequest, "Failed to create user");

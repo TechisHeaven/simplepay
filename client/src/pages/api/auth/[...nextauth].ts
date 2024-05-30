@@ -98,6 +98,7 @@ export const authOptions = {
 
         if (result.status === 201) {
           // Any object returned will be saved in `user` property of the JWT
+
           return result.result;
         } else {
           if (result.error) {

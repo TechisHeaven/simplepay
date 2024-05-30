@@ -1,9 +1,47 @@
-import { IconChevronDown, IconCopy, IconDots } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconChevronDown,
+  IconCopy,
+  IconDots,
+} from "@tabler/icons-react";
 import Link from "next/link";
 import SendMoney from "./sendMoney";
 import { formatMoney } from "@/utils/formatNumber";
+import { BankDataInterface } from "@/types/types.main";
+import { useBank } from "@/pages/bankSessionProvider";
+import { Loader } from "./Loader";
+import { useState } from "react";
 
-export default function balanceContainer() {
+export default function balanceContainer({
+  account,
+}: {
+  account: BankDataInterface;
+}) {
+  const { bankStateLoading } = useBank();
+  const {
+    balance,
+    cards,
+    name,
+    customer_name,
+    account: account_number,
+  }: BankDataInterface = account;
+
+  //
+  const [isCopied, setIsCopied] = useState<boolean>(false);
+
+  // copy to clipboard function
+  async function copyToClipboard<T>(text: T) {
+    await navigator.clipboard.writeText(text as string);
+    setIsCopied(true);
+    const timeout = setTimeout(() => {
+      setIsCopied(false);
+    }, 2000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }
+
   return (
     <div className="border-white border-4 flex gap-2 rounded-[30px] bg-secondary-color max-w-[650px]">
       <div className="bg-white left-container text-black p-10 rounded-3xl font-semibold flex flex-col gap-4">
@@ -14,16 +52,31 @@ export default function balanceContainer() {
           </button>
         </div>
         <div>
-          <h1 className="text-3xl font-bold">
-            ₹ {formatMoney(20000.22)}{" "}
-            <span className="text-primary-color text-xs">Rs</span>
-          </h1>
+          {bankStateLoading ? (
+            <Loader />
+          ) : (
+            <h1 className="text-3xl font-bold">
+              ₹ {formatMoney(account?.balance)}{" "}
+              <span className="text-primary-color text-xs">Rs</span>
+            </h1>
+          )}
         </div>
         <div className="account-copy border border-primary-color/90 p-1 px-2 rounded-md flex flex-row items-center gap-2">
-          <button className="hover:bg-secondary-color-light-background aspect-square p-1 rounded-sm">
-            <IconCopy className="w-4 h-4" />
+          <button
+            onClick={(e) => {
+              copyToClipboard<typeof account_number>(account_number);
+            }}
+            className="hover:bg-secondary-color-light-background aspect-square p-1 rounded-sm"
+          >
+            {isCopied ? (
+              <IconCheck className="w-4 h-4 text-green-500" />
+            ) : (
+              <IconCopy className="w-4 h-4" />
+            )}
           </button>
-          <span className="text-xs text-gray-400">2323 3232 3232 5345</span>
+          <span className="text-xs text-gray-400  tracking-widest">
+            {account_number}
+          </span>
         </div>
         <div className="buttons flex flex-row items-center gap-2  text-xs font-medium">
           <Link

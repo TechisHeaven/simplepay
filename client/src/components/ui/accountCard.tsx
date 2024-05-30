@@ -1,13 +1,26 @@
+import { CardInterface } from "@/types/types.main";
 import Image from "next/image";
 
-export default function AccountCard() {
+export default function AccountCard({ card }: { card: CardInterface }) {
+  function formatAccountNumber<Type>(number: Type | any) {
+    const strNumber: string = String(number);
+
+    const replacedNumber: string =
+      strNumber.substring(0, 4) +
+      strNumber.substring(4, strNumber.length - 1).replace(/\d/g, "*") +
+      strNumber.charAt(strNumber.length - 1);
+
+    // return formattedNumber;
+    return replacedNumber;
+  }
+  const { balance, cardNumber, customerName, bankName } = card;
   return (
     <div
       className="card p-8 rounded-3xl my-2"
       style={{ backgroundImage: `url('/card-background.avif')` }}
     >
       <div className="flex items-center justify-between">
-        <h6 className="text-xs max-w-48 truncate">Himanshu Verma</h6>
+        <h6 className="text-xs max-w-48 truncate">{customerName}</h6>
         <Image
           src={"/mastercard-image.png"}
           fetchPriority="auto"
@@ -18,11 +31,12 @@ export default function AccountCard() {
       </div>
       <div className="mt-8">
         <h1 className="text-3xl">
-          ₹20,000<span className="text-primary-color/50">.20</span>
+          ₹{balance}
+          {/* <span className="text-primary-color/50">.20</span> */}
         </h1>
         <div className="flex items-center py-2 text-xs justify-between">
-          <p className="tracking-widest">3232********9232</p>
-          <p>Simple Pay</p>
+          <p className="tracking-widest">{formatAccountNumber(cardNumber)}</p>
+          <p>{bankName}</p>
         </div>
       </div>
     </div>

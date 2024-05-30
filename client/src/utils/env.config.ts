@@ -6,13 +6,7 @@ dotenv.config();
 
 export const getConfig = (): ENV => {
   return {
-    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID!,
-    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET!,
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL!,
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET!,
-    GITHUB_ID: process.env.GITHUB_ID!,
-    GITHUB_SECRET: process.env.GITHUB_SECRET!,
-    BACKEND_URL: process.env.BACKEND_URL!,
+    BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
   };
 };
 

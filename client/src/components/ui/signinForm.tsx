@@ -8,6 +8,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { UserFormData } from "@/types/types.main";
 import { useRouter } from "next/navigation";
 import { Loader } from "./Loader";
+import Link from "next/link";
 
 export default function SigninForm() {
   const [formData, setFormData] = useState<UserFormData>({
@@ -109,6 +110,10 @@ export default function SigninForm() {
             </>
           )}
         </button>
+        <p className="text-black pt-2">
+          Doesnt have account?
+          <Link href="/register"> Register</Link>
+        </p>
       </form>
       <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
       <div className="flex flex-col space-y-4">
