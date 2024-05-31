@@ -5,13 +5,20 @@ import LastTransaction from "@/components/ui/lastTransaction";
 import Head from "next/head";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession } from "next-auth/react";
+import { useBank } from "./bankSessionProvider";
+import { Loader } from "@/components/ui/Loader";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Page({
   account,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  return (
+  const { bankStateLoading } = useBank();
+  return bankStateLoading ? (
+    <div className="w-full">
+      <Loader center />
+    </div>
+  ) : (
     <>
       <Head>
         <title>Simple Pay</title>
@@ -38,14 +45,14 @@ export const getServerSideProps = (async (context) => {
 
   const id: string | null = session?.user?.id || null;
 
-  // if (!id) {
-  //   return {
-  //     redirect: {
-  //       destination: "/bank", // Redirect to login page if user is not authenticated
-  //       permanent: false,
-  //     },
-  //   };
-  // }
+  if (!id) {
+    return {
+      redirect: {
+        destination: "/bank", // Redirect to login page if user is not authenticated
+        permanent: false,
+      },
+    };
+  }
   const res = await fetch(`http://localhost:5000/api/bank/${id}`, {
     method: "GET",
     cache: "no-cache",
@@ -53,5 +60,5 @@ export const getServerSideProps = (async (context) => {
   });
   const data: Repo = await res.json();
   // Pass data to the page via props
-  return { props: { account: data?.result || null } };
+  return { props: { account: data?.result || {} } };
 }) satisfies GetServerSideProps<{ account: Repo }>;

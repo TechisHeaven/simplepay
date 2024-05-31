@@ -20,7 +20,7 @@ export const BankProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [bankState, setBankState] = useState<BankState | null>(null);
-  const [bankStateLoading, setBankStateLoading] = useState<boolean>(false);
+  const [bankStateLoading, setBankStateLoading] = useState<boolean>(true);
 
   const updateBankState = (newState: BankState) => {
     setBankState(newState);

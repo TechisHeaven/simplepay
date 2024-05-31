@@ -1,6 +1,6 @@
 import QrContainer from "@/components/ui/qrContainer";
 import HandleSearchInput from "@/components/handleSearchInput/handleSearchInput";
-import { GetServerSideProps } from "next";
+
 import { getSession } from "next-auth/react";
 import Head from "next/head";
 

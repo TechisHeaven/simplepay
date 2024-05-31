@@ -18,6 +18,7 @@ export default function balanceContainer({
   account: BankDataInterface;
 }) {
   const { bankStateLoading } = useBank();
+
   const {
     balance,
     cards,

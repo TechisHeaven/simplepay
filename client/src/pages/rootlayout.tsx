@@ -20,8 +20,15 @@ export default function rootlayout({ children }: any) {
   const auth = session?.user;
   useEffect(() => {
     const checkAuthentication = async () => {
+      if (!bankState && !router.pathname.startsWith("/bank")) {
+        router.push("/bank");
+      }
       if (auth) {
-        if (!bankState && !router.pathname.startsWith("/bank")) {
+        if (
+          !bankState &&
+          !bankStateLoading &&
+          !router.pathname.startsWith("/bank")
+        ) {
           return router.push("/bank"); // Redirect to bank page if not account not there
         } else if (bankState && router.pathname.startsWith("/bank")) {
           return router.push("/"); // Redirect to index page
@@ -66,7 +73,7 @@ export default function rootlayout({ children }: any) {
             <Sidebar />
             {children}
           </div>
-        </>
+        </div>
       )}
     </div>
   );

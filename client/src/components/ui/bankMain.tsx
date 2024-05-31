@@ -15,7 +15,7 @@ export function BankMain() {
   const [name, setName] = useState<string>("");
   const [error, setError] = useState<string>("");
   const { data: session } = useSession();
-  const { updateBankState, bankState } = useBank();
+  const { updateBankState, bankState, updateBankStateLoading } = useBank();
   const mutation = useMutation({
     mutationFn: ({ id, name }: { id: string; name: string }) => {
       return BankService.createBank({
@@ -25,8 +25,12 @@ export function BankMain() {
     },
     onSuccess: (data) => {
       if (data.status === 201) {
+        updateBankStateLoading(false);
         updateBankState(data.result);
       }
+    },
+    onError: () => {
+      updateBankStateLoading(false);
     },
   });
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -36,6 +40,7 @@ export function BankMain() {
     if (fullname.length <= 5) {
       return;
     }
+    updateBankStateLoading(true);
     const id = session?.user?.id;
     await mutation.mutate({ id, name: fullname });
   }
