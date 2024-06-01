@@ -7,12 +7,14 @@ import sanitizedConfig from "./utils/env.config";
 const app = express();
 const port = sanitizedConfig.SERVER_PORT;
 const authRoutes = require("./routes/auth.routes");
+const userRoutes = require("./routes/user.routes");
 const bankRoutes = require("./routes/bank.routes");
 
 dotenv.config();
 app.use(express.json());
 app.use(cors());
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/bank", bankRoutes);
 app.get("/", (req, res) => {
   res.status(200).send({ message: "Success Test API" });

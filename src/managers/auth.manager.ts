@@ -8,12 +8,16 @@ export class UserManager {
 
   createUser(user: UserInterface) {
     this.user.push(user);
-
     return user;
   }
 
   getUserByEmail(email: string) {
     return this.user.find((user) => user.email === email);
+  }
+
+  getUserBySearch(search: string) {
+    console.log(this.user);
+    return this.user.find((user) => user.id!);
   }
 
   getUser(email: string, password: string) {

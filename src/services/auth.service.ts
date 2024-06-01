@@ -11,7 +11,6 @@ export const AuthService = {
   //register user
   signUp: async (props: UserInterface) => {
     try {
-      console.log("result", props);
       if (!props.name && !props.email && !props.password) {
         throw createError(statusCodes.notFound, "Please Provide all Fields.");
       }

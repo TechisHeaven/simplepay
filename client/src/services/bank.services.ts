@@ -19,6 +19,24 @@ const BankService = {
       throw new Error(error);
     }
   },
+  createCard: async (data: { id: string; name: string }) => {
+    try {
+      const url = sanitizedConfig.BACKEND_URL;
+      let result = await fetch(`${url}api/bank/card`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      result = await result.json();
+      console.log(result);
+      if (result.status !== 201) {
+        throw result.message;
+      }
+      return result;
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  },
   fetchBank: async (id: string) => {
     try {
       const url = sanitizedConfig.BACKEND_URL;

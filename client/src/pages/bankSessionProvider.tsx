@@ -1,15 +1,10 @@
 // BankContext.tsx
+import { BankDataInterface } from "@/types/types.main";
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
-interface BankState {
-  // Define your bank account state properties here
-  balance: number;
-  // Other properties as needed
-}
-
 interface BankContextType {
-  bankState: BankState | null;
-  updateBankState: (newState: BankState) => void;
+  bankState: BankDataInterface | null;
+  updateBankState: (newState: BankDataInterface) => void;
   bankStateLoading: boolean;
   updateBankStateLoading: (newState: boolean) => void;
 }
@@ -19,10 +14,10 @@ const BankContext = createContext<BankContextType | undefined>(undefined);
 export const BankProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [bankState, setBankState] = useState<BankState | null>(null);
+  const [bankState, setBankState] = useState<BankDataInterface | null>(null);
   const [bankStateLoading, setBankStateLoading] = useState<boolean>(true);
 
-  const updateBankState = (newState: BankState) => {
+  const updateBankState = (newState: BankDataInterface) => {
     setBankState(newState);
   };
   const updateBankStateLoading = (newState: boolean) => {

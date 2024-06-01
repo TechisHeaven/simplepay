@@ -11,6 +11,14 @@ export const BankController = {
       next(error);
     }
   },
+  createCard: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await BankService.createCard(req.body);
+      return res.status(201).json(result);
+    } catch (error) {
+      next(error);
+    }
+  },
 
   fetchBank: async (req: Request, res: Response, next: NextFunction) => {
     try {

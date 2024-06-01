@@ -22,7 +22,7 @@ export default function CustomModal({
             onClick={() => setIsOpen(false)}
           >
             <motion.div
-              className="bg-white rounded-2xl p-6 text-left shadow-xl"
+              className=" text-left w-full flex items-center justify-center"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

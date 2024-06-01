@@ -8,6 +8,7 @@ import React from "react";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = React.useState(() => new QueryClient());
+
   return (
     <SessionProviderAuth {...pageProps}>
       <QueryClientProvider client={queryClient}>

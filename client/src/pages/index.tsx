@@ -7,12 +7,14 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession } from "next-auth/react";
 import { useBank } from "./bankSessionProvider";
 import { Loader } from "@/components/ui/Loader";
+import { dehydrate, QueryClient } from "@tanstack/react-query";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Page({
   account,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const data = account.queries[0]?.state.data?.result;
   const { bankStateLoading } = useBank();
   return bankStateLoading ? (
     <div className="w-full">
@@ -25,9 +27,9 @@ export default function Page({
         <meta property="og:title" content="Simple Pay" key="title" />
       </Head>
       <main className={`${inter.className} p-8 w-full`}>
-        <BalanceContainer account={account} />
+        <BalanceContainer account={data} />
         <div className="flex flex-row gap-4">
-          <CardContainer account={account} />
+          <CardContainer />
           <LastTransaction />
         </div>
       </main>
@@ -53,12 +55,22 @@ export const getServerSideProps = (async (context) => {
       },
     };
   }
-  const res = await fetch(`http://localhost:5000/api/bank/${id}`, {
-    method: "GET",
-    cache: "no-cache",
-    priority: "high",
+
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ["bank"],
+    queryFn: async () => {
+      const res = await fetch(`http://localhost:5000/api/bank/${id}`, {
+        method: "GET",
+        cache: "no-cache",
+        priority: "high",
+      });
+      const result = await res.json();
+      return result;
+    },
   });
-  const data: Repo = await res.json();
+
   // Pass data to the page via props
-  return { props: { account: data?.result || {} } };
+  return { props: { account: dehydrate(queryClient) || {} } };
 }) satisfies GetServerSideProps<{ account: Repo }>;

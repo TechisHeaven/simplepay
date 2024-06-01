@@ -20,7 +20,12 @@ export default function rootlayout({ children }: any) {
   const auth = session?.user;
   useEffect(() => {
     const checkAuthentication = async () => {
-      if (!bankState && !router.pathname.startsWith("/bank")) {
+      if (
+        !bankState &&
+        !router.pathname.startsWith("/bank") &&
+        !router.pathname.startsWith("/login") &&
+        !router.pathname.startsWith("/register")
+      ) {
         router.push("/bank");
       }
       if (auth) {

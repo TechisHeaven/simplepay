@@ -8,6 +8,7 @@ export interface BankInterface {
 }
 
 export interface CreditCardInterface {
+  id: string;
   customerId: string;
   customerName: string;
   cardNumber: string;

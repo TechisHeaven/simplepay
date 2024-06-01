@@ -25,7 +25,7 @@ export default function balanceContainer({
     name,
     customer_name,
     account: account_number,
-  }: BankDataInterface = account;
+  }: BankDataInterface = account || {};
 
   //
   const [isCopied, setIsCopied] = useState<boolean>(false);
