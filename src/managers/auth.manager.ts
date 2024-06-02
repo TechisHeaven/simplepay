@@ -1,9 +1,18 @@
 import { UserInterface } from "../types/types.user";
 
 export class UserManager {
+  private static instance: UserManager;
   private user: UserInterface[] = [];
   constructor() {
     this.user = this.user;
+  }
+
+  // Method to get or create the singleton instance
+  public static getInstance(): UserManager {
+    if (!this.instance) {
+      this.instance = new UserManager();
+    }
+    return this.instance;
   }
 
   createUser(user: UserInterface) {
@@ -15,9 +24,22 @@ export class UserManager {
     return this.user.find((user) => user.email === email);
   }
 
-  getUserBySearch(search: string) {
-    console.log(this.user);
-    return this.user.find((user) => user.id!);
+  getUserById(id: string) {
+    return this.user.find((user) => user.id === id);
+  }
+
+  getUserBySearch(props: { search?: string; id?: string }) {
+    const resultUsers = this.user.filter(
+      (user) =>
+        user.id!.includes(props.search!) ||
+        user.name.toLowerCase().includes(props.search!.toLowerCase())
+    );
+    return resultUsers.map((resultUser) => ({
+      id: resultUser.id,
+      name: resultUser.name,
+      email: resultUser.email,
+      image: resultUser.image,
+    }));
   }
 
   getUser(email: string, password: string) {

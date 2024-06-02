@@ -12,4 +12,12 @@ export const UserController = {
       next(error);
     }
   },
+  fetchUserById: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await UserService.fetchUserById(req.params);
+      return res.status(statusCodes.ok).send(result);
+    } catch (error) {
+      next(error);
+    }
+  },
 };

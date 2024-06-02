@@ -1,27 +1,39 @@
 import { UserManager } from "../managers/auth.manager";
-import { UserInterface } from "../types/types.user";
 import { createError } from "../utils/custom.error";
-import { PasswordUtils } from "../utils/password.utils";
 import statusCodes from "../utils/status.codes";
-import { JWTUtils } from "../utils/token.utils";
-import uuid4 from "uuid4";
 
-const user = new UserManager();
+const user = UserManager.getInstance();
 export const UserService = {
   //fetch user
-  fetchUser: async (props: { search?: string }) => {
+  fetchUser: async (props: { id?: string }) => {
     try {
-      if (!props.search) {
-        throw createError(statusCodes.notFound, "Value must be provided");
+      if (!props.id) {
+        throw createError(statusCodes.notFound, "Id must be provided");
       }
 
-      const result = user.getUserBySearch(props.search);
-      if (!result) {
-        throw createError(statusCodes.badRequest, "Failed to Fetch user");
-      }
+      const result = user.getUserBySearch(props);
 
       return {
-        status: statusCodes.created,
+        status: statusCodes.ok,
+        error: false,
+        success: true,
+        result,
+        message: "User Fetched successfully",
+      };
+    } catch (error: any) {
+      throw createError(error.status, error.message);
+    }
+  },
+  fetchUserById: async (props: { id?: string }) => {
+    try {
+      if (!props.id) {
+        throw createError(statusCodes.notFound, "Id must be provided");
+      }
+
+      const result = user.getUserById(props.id);
+
+      return {
+        status: statusCodes.ok,
         error: false,
         success: true,
         result,

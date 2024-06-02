@@ -6,7 +6,7 @@ import statusCodes from "../utils/status.codes";
 import { JWTUtils } from "../utils/token.utils";
 import uuid4 from "uuid4";
 
-const user = new UserManager();
+const user = UserManager.getInstance();
 export const AuthService = {
   //register user
   signUp: async (props: UserInterface) => {

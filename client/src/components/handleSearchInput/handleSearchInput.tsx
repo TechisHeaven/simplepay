@@ -1,16 +1,32 @@
 import { useState } from "react";
 import SearchPaymentItem from "../ui/SearchPaymentItem";
 import UserService from "@/services/user.service";
+import { useSession } from "next-auth/react";
+import { UserInterface } from "@/types/types.main";
 
 export default function handleSearchInput() {
-  const [search, setSearch] = useState("");
-  const [userData, setUserData] = useState("");
-  async function onSearch() {
+  const [userData, setUserData] = useState<UserInterface[]>([]);
+  const { data: session } = useSession();
+
+  async function onSearch(value: string) {
     try {
-      const result = await UserService.fetchUser(search);
+      if (value.length <= 0) {
+        return setUserData([]);
+      }
+      const params = {
+        id: session?.user?.id,
+        search: value,
+      };
+      const result = await UserService.fetchUser(params);
       console.log(result);
+
+      if (result) {
+        setUserData(result.result!);
+      }
     } catch (error) {
-      console.log(error);
+      if (error) {
+        console.log(error);
+      }
     }
   }
 
@@ -20,14 +36,13 @@ export default function handleSearchInput() {
         <label htmlFor="receiver">To</label>
         <input
           type="text"
-          onKeyUp={() => onSearch()}
-          onChange={(e) => setSearch(e.target.value)}
+          onKeyUp={(e: any) => onSearch(e.target.value)}
           placeholder="Name, Email, Phone no."
           className="w-full p-2 px-4 outline-none rounded-md bg-secondary-color-background  focus:border-primary-color hover:border-primary-color border border-gray-500 transition-all"
         />
       </div>
       <div className="items p-2 flex-col flex gap-4">
-        {userData.length > 0 && <SearchPaymentItem />}
+        {userData.length > 0 && <SearchPaymentItem users={userData} />}
       </div>
     </>
   );

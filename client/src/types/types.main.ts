@@ -4,6 +4,12 @@ export interface UserFormData {
   password: string;
   id?: string;
 }
+export interface UserInterface {
+  email: string;
+  id: string;
+  image: string;
+  name: string;
+}
 
 export interface BankDataInterface {
   id: string;

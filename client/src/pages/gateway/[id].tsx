@@ -2,20 +2,27 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader } from "@/components/ui/Loader";
 import PaymentStatus from "@/components/ui/paymentStatus";
 import { SelectScrollable } from "@/components/ui/scrollableSelectGateway";
+import { UserInterface } from "@/types/types.main";
+import sanitizedConfig from "@/utils/env.config";
 import { IconCheck } from "@tabler/icons-react";
 import { ArrowRight, Info } from "lucide-react";
+import { GetServerSideProps } from "next";
+import { getSession } from "next-auth/react";
 import Head from "next/head";
+import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
+import { useBank } from "../bankSessionProvider";
 
-export default function Page() {
+export default function Page({ user }: { user: UserInterface }) {
   const router = useRouter();
+  const { bankState } = useBank();
   // return <p>gateway: {router.query.id}</p>;
   return (
     <>
       <Head>
         <title>Gateway</title>
       </Head>
-      {true ? (
+      {false ? (
         <PaymentStatus />
       ) : (
         <div className="p-8 w-full flex items-start flex-col">
@@ -37,23 +44,23 @@ export default function Page() {
                   className="rounded-xl "
                   width={40}
                   height={40}
-                  src={
-                    "https://lh3.googleusercontent.com/a/ACg8ocIXH1OzdIK01CcjMDfzvlhE-LPnbaeCUG5RLgnXP0puXt80bqNX=s96-c"
-                  }
+                  src={user?.image}
                   alt="receiver-image"
                 />
-                <AvatarFallback className="bg-primary-color">HV</AvatarFallback>
+                <AvatarFallback className="bg-primary-color">
+                  {user?.name[0]}
+                </AvatarFallback>
               </Avatar>
               <div>
-                <h4>Himanshu</h4>
-                <p className="text-gray-400 text-xs">+91 823232323</p>
+                <h4>{user?.name}</h4>
+                <p className="text-gray-400 text-xs">+91 000000000</p>
               </div>
             </div>
             <div className="banking flex flex-row gap-2  items-center p-2 text-sm font-semibold">
               <div className=" rounded-full p-1 bg-green-500">
                 <IconCheck className="w-3 h-3" />
               </div>
-              <h6>Bank Name : Himanshu Verma</h6>
+              <h6>Bank Name : {user?.name}</h6>
             </div>
             <div className="caption flex items-center gap-2 rounded-md text-gray-400 text-xs bg-secondary-color-background/50 p-2 px-4">
               <Info className="w-4 h-4" /> Transfer made to bank account could
@@ -77,7 +84,7 @@ export default function Page() {
               />
             </div>
             <div className="transaction-option my-2 flex items-center flex-row gap-2">
-              <SelectScrollable />
+              <SelectScrollable cards={bankState?.cards} />
               <button className="bg-primary-color p-4 rounded-md">
                 {true ? <ArrowRight /> : <Loader />}
               </button>
@@ -88,3 +95,13 @@ export default function Page() {
     </>
   );
 }
+
+export const getServerSideProps = (async ({ params }) => {
+  // Fetch data from external API
+  const url = sanitizedConfig.BACKEND_URL;
+  const { id } = params as { id: string };
+  const res = await fetch(`${url}api/user/${id}`);
+  const user: { result: UserInterface } = await res.json();
+  // Pass data to the page via props
+  return { props: { user: user.result } };
+}) satisfies GetServerSideProps<{ user: UserInterface }>;
