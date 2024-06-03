@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import {
   Select,
   SelectContent,
@@ -11,10 +9,24 @@ import {
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import { CardInterface } from "@/types/types.main";
+import { Dispatch, useEffect } from "react";
 
-export function SelectScrollable({ cards }: { cards: CardInterface[] }) {
+export function SelectScrollable({
+  cards,
+  setSelected,
+}: {
+  cards: CardInterface[];
+  setSelected: any;
+}) {
+  useEffect(() => {
+    setSelected(cards[0].id.toString());
+  }, []);
+
   return cards ? (
-    <Select defaultValue={cards[0].cardNumber.toString()}>
+    <Select
+      onValueChange={(value) => setSelected(value)}
+      defaultValue={cards[0].id.toString()}
+    >
       <SelectTrigger className="w-[280px] h-full border-0 shadow-sm hover:shadow-md focus:ring-primary-color bg-secondary-color-background rounded-xl">
         <SelectValue placeholder="Select Card" />
       </SelectTrigger>
@@ -23,7 +35,7 @@ export function SelectScrollable({ cards }: { cards: CardInterface[] }) {
           <SelectLabel>Accounts</SelectLabel>
           {cards?.map((card) => {
             return (
-              <SelectItem value={card?.cardNumber.toString()}>
+              <SelectItem value={card?.id.toString()}>
                 <div className="flex items-center flex-row gap-2">
                   <Avatar>
                     <AvatarImage

@@ -18,7 +18,6 @@ export default function handleSearchInput() {
         search: value,
       };
       const result = await UserService.fetchUser(params);
-      console.log(result);
 
       if (result) {
         setUserData(result.result!);

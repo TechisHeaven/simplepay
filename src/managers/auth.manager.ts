@@ -34,12 +34,16 @@ export class UserManager {
         user.id!.includes(props.search!) ||
         user.name.toLowerCase().includes(props.search!.toLowerCase())
     );
-    return resultUsers.map((resultUser) => ({
-      id: resultUser.id,
-      name: resultUser.name,
-      email: resultUser.email,
-      image: resultUser.image,
-    }));
+    return resultUsers.map((resultUser: UserInterface) =>
+      resultUser.id !== props.id
+        ? {
+            id: resultUser.id,
+            name: resultUser.name,
+            email: resultUser.email,
+            image: resultUser.image,
+          }
+        : null
+    );
   }
 
   getUser(email: string, password: string) {

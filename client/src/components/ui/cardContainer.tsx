@@ -7,17 +7,19 @@ import { FormEvent, useState } from "react";
 import { Input } from "./input";
 import { useBank } from "@/pages/bankSessionProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import BankService from "@/services/bank.services";
+import BankService from "@/services/bank.service";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
-export default function CardContainer() {
+export default function CardContainer({
+  account,
+}: {
+  account: BankDataInterface;
+}) {
   const { data: session } = useSession();
-
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { bankState } = useBank();
-  // const { cards } = account;
-  // console.log(account);
-  const cards = bankState?.cards;
+  const cards = account?.cards;
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: ({ id, name }: { id: string; name: string }) => {
@@ -31,7 +33,7 @@ export default function CardContainer() {
         await queryClient.refetchQueries({
           queryKey: ["bank"],
         });
-        bankState?.cards.push(data.result);
+        account.cards.push(data.result);
         setIsOpen(false);
       }
     },

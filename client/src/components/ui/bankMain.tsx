@@ -1,7 +1,7 @@
 "use client";
 import React, { FormEvent, useState } from "react";
 import { BackgroundBeams } from "./background-beams";
-import BankService from "@/services/bank.services";
+import BankService from "@/services/bank.service";
 import { useSession } from "next-auth/react";
 import {
   QueryClient,

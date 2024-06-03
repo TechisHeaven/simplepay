@@ -7,15 +7,59 @@ import sanitizedConfig from "@/utils/env.config";
 import { IconCheck } from "@tabler/icons-react";
 import { ArrowRight, Info } from "lucide-react";
 import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/react";
 import Head from "next/head";
-import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useBank } from "../bankSessionProvider";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import TransactionService from "@/services/transaction.service";
 
 export default function Page({ user }: { user: UserInterface }) {
   const router = useRouter();
   const { bankState } = useBank();
+  const { data: session } = useSession();
+  const currentUserId = session?.user?.id;
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [selected, setSelected] = useState("");
+  const [formData, setFormData] = useState({
+    amount: 0,
+    from: currentUserId,
+    to: user?.id,
+    note: "",
+    card: selected,
+  });
+  useEffect(() => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      card: selected,
+    }));
+  }, [selected]);
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setError("");
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+    if (formData.amount <= 0 || formData.note.length <= 0) {
+      return setError("Please Fill All Fields");
+    }
+    try {
+      const result = await TransactionService.createTransaction(formData);
+      if (result.status === 201) {
+        // bankState?.cards.find((c) => c.id === selected)?.balance =
+        //   formData.amount;
+        router.push("/");
+      }
+    } catch (error: any) {
+      setError(error.message);
+    }
+  }
   // return <p>gateway: {router.query.id}</p>;
   return (
     <>
@@ -37,7 +81,10 @@ export default function Page({ user }: { user: UserInterface }) {
               Receive
             </button>
           </div>
-          <div className="py-8 flex flex-col items-start gap-2">
+          <form
+            onSubmit={handleSubmit}
+            className="py-8 flex flex-col items-start gap-2"
+          >
             <div className="userDetails flex items-center gap-2 flex-row">
               <Avatar>
                 <AvatarImage
@@ -71,7 +118,9 @@ export default function Page({ user }: { user: UserInterface }) {
               <input
                 type="number"
                 autoFocus
-                name="price"
+                id="amount"
+                onChange={handleChange}
+                name="amount"
                 placeholder="100.00"
                 className="text-5xl text-white outline-none bg-secondary-color [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
@@ -79,17 +128,24 @@ export default function Page({ user }: { user: UserInterface }) {
             <div className="note">
               <input
                 type="text"
+                name="note"
+                id="note"
+                onChange={handleChange}
                 placeholder="Note"
                 className="outline-none p-2 px-4 rounded-md bg-secondary-color-background"
               />
             </div>
             <div className="transaction-option my-2 flex items-center flex-row gap-2">
-              <SelectScrollable cards={bankState?.cards} />
-              <button className="bg-primary-color p-4 rounded-md">
+              <SelectScrollable
+                setSelected={setSelected}
+                cards={bankState?.cards!}
+              />
+              <button type="submit" className="bg-primary-color p-4 rounded-md">
                 {true ? <ArrowRight /> : <Loader />}
               </button>
             </div>
-          </div>
+            <p className="text-xs text-red-500">{error}</p>
+          </form>
         </div>
       )}
     </>
@@ -103,5 +159,5 @@ export const getServerSideProps = (async ({ params }) => {
   const res = await fetch(`${url}api/user/${id}`);
   const user: { result: UserInterface } = await res.json();
   // Pass data to the page via props
-  return { props: { user: user.result } };
+  return { props: { user: user.result || null } };
 }) satisfies GetServerSideProps<{ user: UserInterface }>;

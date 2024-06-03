@@ -22,6 +22,7 @@ export interface BankDataInterface {
 }
 
 export interface CardInterface {
+  id: string;
   customerId: string;
   customerName: string;
   cardNumber: number;

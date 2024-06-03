@@ -5,7 +5,7 @@ import statusCodes from "../utils/status.codes";
 import { randomNumberGenerator } from "../utils/randomNumberGenerator";
 import { CreditCardInterface } from "../types/types.bank";
 
-const Bank = new BankManager();
+const Bank = BankManager.getInstance();
 export const BankService = {
   createBank: async ({ id, name }: { id: string; name: string }) => {
     try {

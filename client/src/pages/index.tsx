@@ -29,7 +29,7 @@ export default function Page({
       <main className={`${inter.className} p-8 w-full`}>
         <BalanceContainer account={data} />
         <div className="flex flex-row gap-4">
-          <CardContainer />
+          <CardContainer account={data} />
           <LastTransaction />
         </div>
       </main>

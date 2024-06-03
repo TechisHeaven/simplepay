@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useBank } from "./bankSessionProvider";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
-import BankService from "@/services/bank.services";
+import BankService from "@/services/bank.service";
 
 export default function rootlayout({ children }: any) {
   const router = useRouter();
